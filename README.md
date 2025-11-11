@@ -14,7 +14,7 @@
 
 ```bash
 # 1. 克隆本项目
-git clone [https://github.com/username/HeyTeaAutoDrawer.git](https://github.com/你的用户名/HeyTeaAutoDrawer.git)
+git clone https://github.com/username/HeyTeaAutoDrawer.git
 cd HeyTeaAutoDrawer
 
 # 2. 创建一个新的 conda 环境
