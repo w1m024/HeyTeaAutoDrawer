@@ -7,7 +7,7 @@ from InquirerPy import inquirer
 
 from utils.coord_utils import capture_screen_region
 from utils.image_utils import auto_fill_image_config
-from utils.config_utils import load_config, save_config, show_config, modify_config
+from utils.config_utils import load_config, save_config, show_config, modify_config, reset_config_file
 from utils.print_utils import print_info, print_success, print_warning, print_error, print_step, print_section, print_countdown
 from core.auto_drawer_canny import AutoDrawerCanny
 from core.auto_drawer_scan import AutoDrawerScan
@@ -95,12 +95,19 @@ def main():
     parser.add_argument("image", nargs="?", help="图片文件名（位于 images/ 文件夹下）")
     parser.add_argument("--show-config", action="store_true", help="查看当前配置")
     parser.add_argument("--set", type=str, help="修改配置，例如 image_config.W_IMG=1024")
+    parser.add_argument("--reset-preserve-defaults", action="store_true",
+                        help="重置配置为默认（保留 H_IMG W_IMG THRESHOLD_VALUE 和 screen_config）")
     args = parser.parse_args()
 
     config = load_config()
 
     if args.show_config:
         show_config(config)
+        return
+
+    if args.reset_preserve_defaults:
+        # perform reset and exit
+        reset_config_file()
         return
 
     if args.set:
@@ -138,6 +145,7 @@ def main():
                 "修改配置",
                 "查看当前配置",
                 "重选画板范围",
+                "重置默认配置",
                 "开始绘画",
                 "退出"
             ],
@@ -145,6 +153,10 @@ def main():
 
         if main_choice == "修改配置":
             tui_modify_config(config)
+        elif main_choice == "重置默认配置":
+            reset_config_file()
+            config = load_config()
+            print_success("配置已重置为默认值（保留 H_IMG W_IMG THRESHOLD_VALUE 和 screen_config) ")
 
         elif main_choice == "开始绘画":
             tui_draw_menu(config, image_path)
